@@ -13,7 +13,7 @@ LOW_PRIORITY='\e[92m';
 NC='\e[0m';
 
 function smbcinit {
-    npm i $BASH_SCRIPTS/Node_Resources;
+    npm i $SMBC_TOOLS/Node_Resources;
 }
 
 function studio() {
@@ -35,7 +35,7 @@ function fbcode() {
 }
 
 function jira() { 
-    fileName="$BASH_SCRIPTS/Resources/Jira.txt";
+    fileName="$SMBC_TOOLS/Resources/Jira.txt";
 
     if [ "$#" == 0 ]; then
         start chrome "https://stockportbi.atlassian.net/browse/";
@@ -48,7 +48,7 @@ function jira() {
         for ELEMENT in "$@"; do
             ARGS+=" \"${ELEMENT}\""
         done
-        node $BASH_SCRIPTS/Node_Resources/index.js $BASH_SCRIPTS 'jira' $ARGS;
+        node $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS 'jira' $ARGS;
     fi 
 }
 
@@ -57,7 +57,7 @@ function model() {
     for ELEMENT in "$@"; do
         ARGS+=" \"${ELEMENT}\""
     done
-    node $BASH_SCRIPTS/Node_Resources/index.js $BASH_SCRIPTS 'createModel' $ARGS $WORK_DIR;
+    node $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS 'createModel' $ARGS $WORK_DIR;
 }
 
 function validate() {
@@ -65,7 +65,7 @@ function validate() {
     for ELEMENT in "$@"; do
         ARGS+=" \"${ELEMENT}\""
     done
-    node $BASH_SCRIPTS/Node_Resources/index.js $BASH_SCRIPTS 'validateJson' $ARGS $WORK_DIR;
+    node $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS 'validateJson' $ARGS $WORK_DIR;
 }
 
 function slugs() {
@@ -73,7 +73,7 @@ function slugs() {
     for ELEMENT in "$@"; do
         ARGS+=" \"${ELEMENT}\""
     done
-    node $BASH_SCRIPTS/Node_Resources/index.js $BASH_SCRIPTS 'slugs' $ARGS $WORK_DIR;
+    node $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS 'slugs' $ARGS $WORK_DIR;
 }
 
 function flow() {
@@ -81,7 +81,7 @@ function flow() {
     for ELEMENT in "$@"; do
         ARGS+=" \"${ELEMENT}\""
     done
-    node $BASH_SCRIPTS/Node_Resources/index.js $BASH_SCRIPTS 'flow' $ARGS $WORK_DIR;
+    node $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS 'flow' $ARGS $WORK_DIR;
 }
 
 function addjson() {
@@ -171,10 +171,10 @@ function addjson() {
     fi
 
     echo "Comparing files in form builder...";
-    if [ ! -f "$BASH_SCRIPTS/Resources/lastJsonUpdate.txt" ]; then
-       echo "0" > $BASH_SCRIPTS/Resources/lastJsonUpdate.txt;
+    if [ ! -f "$SMBC_TOOLS/Resources/lastJsonUpdate.txt" ]; then
+       echo "0" > $SMBC_TOOLS/Resources/lastJsonUpdate.txt;
     fi
-    LAST_RUN=$(cat "$BASH_SCRIPTS/Resources/lastJsonUpdate.txt");
+    LAST_RUN=$(cat "$SMBC_TOOLS/Resources/lastJsonUpdate.txt");
 
     # Iterate over non UI files in form-builder and update any that are different
     find $WORK_DIR/form-builder/src/DSL/ -maxdepth 1 -not -name *UI-* -type f | while read fbname; do
@@ -205,7 +205,7 @@ function addjson() {
         fi
     done
 
-    echo $(date '+%s') > "$BASH_SCRIPTS/Resources/lastJsonUpdate.txt";
+    echo $(date '+%s') > "$SMBC_TOOLS/Resources/lastJsonUpdate.txt";
 
     echo "Done."
 }
