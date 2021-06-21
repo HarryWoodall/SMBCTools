@@ -59,7 +59,7 @@ module.exports = function (args, res) {
   }
 };
 
-function createField(element, id, outputType) {
+function createField(element, id) {
   if (!id) return null;
 
   let type;
@@ -197,13 +197,13 @@ function addField(field, modifier) {
 function writeToFile() {
   let data = "";
 
-  data += "{\n";
+  data += "{\r\n";
 
   for (let item of fields.values()) {
-    data += `\tpublic ${item.type} ${item.id} { get; set; }\n`;
+    data += `\tpublic ${item.type} ${item.id} { get; set; }\r\n`;
   }
 
-  data += "}\n";
+  data += "}";
 
   fs.writeFile(`${resources}/model.txt`, data, () => {
     open(`${resources}/model.txt`, { wait: false });

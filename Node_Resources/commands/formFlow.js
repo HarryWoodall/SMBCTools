@@ -67,7 +67,7 @@ function addFlow(page, content, pages, startPage) {
           ? "success"
           : behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "pageslug")];
 
-      if (behaviour.conditions?.length == 1) {
+      if (behaviour.conditions && behaviour.conditions.length == 1) {
         const condition = behaviour.conditions[0];
         const questionId = condition[Object.keys(condition).find((key) => key.toLowerCase() === "questionid")];
         const conditionType = condition[Object.keys(condition).find((key) => key.toLowerCase() === "conditiontype")];
