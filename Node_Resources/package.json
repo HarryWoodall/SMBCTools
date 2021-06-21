@@ -1,0 +1,15 @@
+{
+  "name": "node-resouces",
+  "version": "1.0.0",
+  "description": "js files used in bash scripts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Harry Woodall",
+  "license": "ISC",
+  "dependencies": {
+    "open": "^8.0.4",
+    "remove-markdown": "^0.3.0"
+  }
+}
