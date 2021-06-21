@@ -39,7 +39,6 @@ module.exports = function (args, res) {
 
 async function generateFlow(pages, name, startPage) {
   console.log("generation routes");
-  console.log();
   let content = "# " + name + "\n```mermaid\ngraph TB\n";
   content += `START(( )) --> ${startPage}\n`;
 
@@ -92,7 +91,7 @@ function hasPage(pages, slug) {
     if (page.PageSlug == slug) return true;
   }
 
-  console.log(`ERROR: page ${slug} doesn't exist`);
+  console.log(`${colors.HIGH_PRIORITY}ERROR${colors.RESET}: page ${colors.ROUTE_PAGE_SLUG}${slug}${colors.RESET} doesn't exist`);
   return false;
 }
 
@@ -114,7 +113,7 @@ function isPointedTo(pages, startPage, slug) {
     }
   }
 
-  console.log(`WARNING: page ${slug} is inaccessible`);
+  console.log(`${colors.MED_PRIORITY}WARNING${colors.RESET}: page ${colors.ROUTE_PAGE_SLUG}${slug}${colors.RESET} is inaccessible`);
   return false;
 }
 

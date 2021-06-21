@@ -22,8 +22,6 @@ module.exports = function (args, res) {
   let form = args.pop();
   const modifier = args.pop();
 
-  console.log(`${wkDir}, ${form}, ${modifier}`);
-
   if (form.slice(-5) !== ".json") form += ".json";
 
   const fileSource = `${wkDir}/form-builder-json/v2/${form}`;
@@ -213,11 +211,10 @@ function writeToFile() {
 }
 
 function writeJsonToFile(object) {
-  fs.writeFile(`${resources}/model.txt`, JSON.stringify(object, null, 2), () => {
-    open(`${resources}/model.txt`, { wait: false });
-    console.log("model created");
-    console.log("opening file");
-  });
+  fs.writeFileSync(`${resources}/model.txt`, JSON.stringify(object, null, 2));
+  open(`${resources}/model.txt`);
+  console.log("model created");
+  console.log("opening file");
 }
 
 function displayHelp() {
