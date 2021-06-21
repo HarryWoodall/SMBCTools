@@ -12,7 +12,7 @@ MED_PRIORITY='\e[33m';
 LOW_PRIORITY='\e[92m';
 NC='\e[0m';
 
-NODE_COMMAND="node --no-warnings $BASH_SCRIPTS/Node_Resources/index.js $BASH_SCRIPTS"
+NODE_COMMAND="node --no-warnings $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS"
 
 function smbcinit {
     npm i $SMBC_TOOLS/Node_Resources;
