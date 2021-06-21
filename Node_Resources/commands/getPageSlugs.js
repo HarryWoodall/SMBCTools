@@ -48,7 +48,7 @@ module.exports = function (args, res) {
 function displayRoute(page, map) {
   if (page.Behaviours) {
     page.Behaviours.forEach((behaviour, index) => {
-      if (behaviour.conditions?.length == 1) {
+      if (behaviour.conditions && behaviour.conditions.length == 1) {
         const condition = behaviour.conditions[0];
         const questionId = condition[Object.keys(condition).find((key) => key.toLowerCase() === "questionId".toLowerCase())];
         const conditionType = condition[Object.keys(condition).find((key) => key.toLowerCase() === "conditionType".toLowerCase())];

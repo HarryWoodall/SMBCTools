@@ -19,5 +19,5 @@ module.exports = {
   ROUTE_CONDITION_TYPE: "\x1b[32m",
   ROUTE_COMPARISON_VALUE: "\x1b[33m",
   ROUTE_BEHAVIOUR_TYPE: "\x1b[34m",
-  ROUTE_PAGE_SLUG: "\x1b[35m",
+  ROUTE_PAGE_SLUG: "\x1b[36m",
 };

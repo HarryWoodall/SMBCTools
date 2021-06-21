@@ -12,6 +12,8 @@ MED_PRIORITY='\e[33m';
 LOW_PRIORITY='\e[92m';
 NC='\e[0m';
 
+NODE_COMMAND="node --no-warnings $BASH_SCRIPTS/Node_Resources/index.js $BASH_SCRIPTS"
+
 function smbcinit {
     npm i $SMBC_TOOLS/Node_Resources;
 }
@@ -48,7 +50,7 @@ function jira() {
         for ELEMENT in "$@"; do
             ARGS+=" \"${ELEMENT}\""
         done
-        node $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS 'jira' $ARGS;
+        $NODE_COMMAND 'jira' $ARGS;
     fi 
 }
 
@@ -57,7 +59,7 @@ function model() {
     for ELEMENT in "$@"; do
         ARGS+=" \"${ELEMENT}\""
     done
-    node $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS 'createModel' $ARGS $WORK_DIR;
+    $NODE_COMMAND 'createModel' $ARGS $WORK_DIR;
 }
 
 function validate() {
@@ -65,7 +67,7 @@ function validate() {
     for ELEMENT in "$@"; do
         ARGS+=" \"${ELEMENT}\""
     done
-    node $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS 'validateJson' $ARGS $WORK_DIR;
+    $NODE_COMMAND 'validateJson' $ARGS $WORK_DIR;
 }
 
 function slugs() {
@@ -73,7 +75,7 @@ function slugs() {
     for ELEMENT in "$@"; do
         ARGS+=" \"${ELEMENT}\""
     done
-    node $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS 'slugs' $ARGS $WORK_DIR;
+    $NODE_COMMAND 'slugs' $ARGS $WORK_DIR;
 }
 
 function flow() {
@@ -81,7 +83,7 @@ function flow() {
     for ELEMENT in "$@"; do
         ARGS+=" \"${ELEMENT}\""
     done
-    node $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS 'flow' $ARGS $WORK_DIR;
+    $NODE_COMMAND 'flow' $ARGS $WORK_DIR;
 }
 
 function addjson() {
