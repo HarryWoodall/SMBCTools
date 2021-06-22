@@ -8,6 +8,8 @@ module.exports = function (args, res) {
   }
 
   /**
+   * Command given in the form <command name> <form-name>
+   * 
    * Retrive the code directory and
    * the form name from the arguments
    */
