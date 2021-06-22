@@ -18,7 +18,8 @@ module.exports = function (args, res) {
   }
 
   const wkDir = args.pop();
-  let form = args[0];
+  let form = args.pop();
+  const modifier = args.pop();
 
   if (form.slice(-5) !== ".json") form += ".json";
   const fileSource = `${wkDir}/form-builder-json/v2/${form}`;
@@ -32,10 +33,10 @@ module.exports = function (args, res) {
       console.log();
       for (let page of form.Pages) {
         buildMap(page, idPageMap);
-        if (args[1] == "-s" || args[1] == "-routes" || args[1] == "-e") console.log();
+        if (modifier == "-s" || modifier == "-routes" || modifier == "-e") console.log();
         console.log(`${page.PageSlug}`);
-        if (args[1] == "-e") displayElements(page);
-        if (args[1] == "-routes") displayRoute(page, idPageMap);
+        if (modifier == "-e") displayElements(page);
+        if (modifier == "-routes") displayRoute(page, idPageMap);
       }
     } else {
       console.log(`File ${form} not found`);
