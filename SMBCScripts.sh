@@ -18,24 +18,6 @@ function smbcinit {
     npm i $SMBC_TOOLS/Node_Resources;
 }
 
-function studio() {
-    for i in *.sln; do
-        [ -f $i ] || break;
-        start $i;
-        return;
-    done
-    echo "No .sln file found"
-}
-
-function fbstudio() {
-    cd $WORK_DIR/form-builder;
-    studio;
-}
-
-function fbcode() {
-    code $WORK_DIR/form-builder;
-}
-
 function jira() { 
     fileName="$SMBC_TOOLS/Resources/Jira.txt";
 
