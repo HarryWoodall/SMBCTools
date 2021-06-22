@@ -35,3 +35,5 @@ List of commands
 - validate
 - flow
 - jira
+
+See the [Wiki](https://github.com/Teziokz/SMBCTools/wiki) to find out more
