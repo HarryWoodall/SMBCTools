@@ -1,13 +1,7 @@
-const jira = require("./commands/jira");
-const createModel = require("./commands/createModel");
-const validateJson = require("./commands/validateJson");
-const slugs = require("./commands/getPageSlugs");
-const flow = require("./commands/formFlow");
-
 module.exports = {
-  jira: jira,
-  createModel: createModel,
-  validateJson: validateJson,
-  slugs: slugs,
-  flow: flow,
+  jira: require("./commands/jira"),
+  createModel: require("./commands/createModel"),
+  validateJson: require("./commands/validateJson"),
+  slugs: require("./commands/getPageSlugs"),
+  flow: require("./commands/formFlow"),
 };
