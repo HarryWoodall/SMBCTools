@@ -6,7 +6,7 @@ let resources;
 const pageMap = {};
 const reachablePages = [];
 const errorPages = [];
-const warningPages = []; 
+const warningPages = [];
 
 module.exports = function (args, res) {
   if (args.length !== 2) {
@@ -80,11 +80,13 @@ function addFlow(page, content, pages, startPage) {
 
         content += `${cleanPageSlug(page.PageSlug)}${
           !isPointedTo(startPage, page.PageSlug) ? ":::dangling" : ""
-        } -- ${questionId}<br>${conditionType}<br>${comparisonValue} --> ${cleanPageSlug(pageSlug)}${!isPointedTo(startPage, pageSlug) ? ":::dangling" : ""}${!hasPage(pageSlug) ? ":::missing" : ""}\n`;
-      } else {
-        content += `${cleanPageSlug(page.PageSlug)}${!isPointedTo(startPage, page.PageSlug) ? ":::dangling" : ""} --> ${cleanPageSlug(pageSlug)}${!isPointedTo(startPage, pageSlug) ? ":::dangling" : ""}${
+        } -- ${questionId}<br>${conditionType}<br>${comparisonValue} --> ${cleanPageSlug(pageSlug)}${!isPointedTo(startPage, pageSlug) ? ":::dangling" : ""}${
           !hasPage(pageSlug) ? ":::missing" : ""
         }\n`;
+      } else {
+        content += `${cleanPageSlug(page.PageSlug)}${!isPointedTo(startPage, page.PageSlug) ? ":::dangling" : ""} --> ${cleanPageSlug(pageSlug)}${
+          !isPointedTo(startPage, pageSlug) ? ":::dangling" : ""
+        }${!hasPage(pageSlug) ? ":::missing" : ""}\n`;
       }
     });
   }
@@ -95,7 +97,7 @@ function addFlow(page, content, pages, startPage) {
 function hasPage(slug) {
   if (pageMap[slug]) return true;
 
-  if (!errorPages.includes(slug)){
+  if (!errorPages.includes(slug)) {
     warningPages.push(slug);
     console.log(`${colors.HIGH_PRIORITY}ERROR${colors.RESET}: page ${colors.ROUTE_PAGE_SLUG}${slug}${colors.RESET} doesn't exist`);
   }
@@ -103,9 +105,9 @@ function hasPage(slug) {
 }
 
 function isPointedTo(startPage, slug) {
-  if (startPage == slug ||  reachablePages.includes(slug) || !pageMap[slug]) return true;
+  if (startPage == slug || reachablePages.includes(slug) || !pageMap[slug]) return true;
 
-  if (!warningPages.includes(slug)){
+  if (!warningPages.includes(slug)) {
     warningPages.push(slug);
     console.log(`${colors.MED_PRIORITY}WARNING${colors.RESET}: page ${colors.ROUTE_PAGE_SLUG}${slug}${colors.RESET} is inaccessible`);
   }
@@ -113,33 +115,34 @@ function isPointedTo(startPage, slug) {
 }
 
 function buildReachableMap(startPage) {
-  addToReachableMap(startPage, reachablePages, []);
+  addToReachableMap(startPage, reachablePages, [], 0);
 }
 
-function addToReachableMap(page, map, visitedPages) {
-  if (!map.includes(page.PageSlug)) {
-    map.push(page.PageSlug);
-  }
+function addToReachableMap(page, map, visitedPages, depth) {
+  if (visitedPages.includes(page.PageSlug)) return map;
+  if (!map.includes(page.PageSlug)) map.push(page.PageSlug);
 
-  if (!visitedPages[page.pageSlug] && page.Behaviours) {
-    visitedPages.push(page.PageSlug);
+  visitedPages.push(page.PageSlug);
+
+  console.log(`function depth: ${depth}`);
+
+  if (page.Behaviours) {
     page.Behaviours.forEach((behaviour) => {
       const pageSlug =
         behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "behaviourtype")].toLowerCase() == "submitform"
           ? "success"
           : behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "pageslug")];
-      
+
       if (pageMap[pageSlug]) {
-        addToReachableMap(pageMap[pageSlug], map, visitedPages);
+        addToReachableMap(pageMap[pageSlug], map, visitedPages, depth + 1);
       }
     });
-    
   }
   return map;
 }
 
 function buildPageMap(pages) {
-  pages.forEach(page => {
+  pages.forEach((page) => {
     pageMap[page.PageSlug] = page;
   });
 }
