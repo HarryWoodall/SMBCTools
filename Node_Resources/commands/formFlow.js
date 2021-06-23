@@ -50,7 +50,7 @@ async function generateFlow(pages, name, startPage) {
   content += `START(( )) --> ${startPage}\n`;
 
   for (let page of pages) {
-    content = addFlow(page, content, pages, startPage);
+    content = addFlow(page, content, startPage);
   }
 
   content += "classDef missing fill:#999, stroke:#000, color:gray;\n";
@@ -64,7 +64,7 @@ async function generateFlow(pages, name, startPage) {
   }
 }
 
-function addFlow(page, content, pages, startPage) {
+function addFlow(page, content, startPage) {
   if (page.Behaviours) {
     page.Behaviours.forEach((behaviour) => {
       const pageSlug =
