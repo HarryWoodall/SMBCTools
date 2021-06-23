@@ -118,13 +118,11 @@ function buildReachableMap(startPage) {
   addToReachableMap(startPage, reachablePages, [], 0);
 }
 
-function addToReachableMap(page, map, visitedPages, depth) {
+function addToReachableMap(page, map, visitedPages) {
   if (visitedPages.includes(page.PageSlug)) return map;
   if (!map.includes(page.PageSlug)) map.push(page.PageSlug);
 
   visitedPages.push(page.PageSlug);
-
-  console.log(`function depth: ${depth}`);
 
   if (page.Behaviours) {
     page.Behaviours.forEach((behaviour) => {
@@ -134,7 +132,7 @@ function addToReachableMap(page, map, visitedPages, depth) {
           : behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "pageslug")];
 
       if (pageMap[pageSlug]) {
-        addToReachableMap(pageMap[pageSlug], map, visitedPages, depth + 1);
+        addToReachableMap(pageMap[pageSlug], map, visitedPages);
       }
     });
   }
