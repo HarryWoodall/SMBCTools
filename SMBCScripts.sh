@@ -18,6 +18,14 @@ function smbcinit {
     npm i $SMBC_TOOLS/Node_Resources;
 }
 
+function trivia() {
+    ARGS="";
+    for ELEMENT in "$@"; do
+        ARGS+=" \"${ELEMENT}\""
+    done
+    $NODE_COMMAND 'trivia' $ARGS;
+}
+
 function jira() { 
     fileName="$SMBC_TOOLS/Resources/Jira.txt";
 
