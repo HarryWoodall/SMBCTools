@@ -116,12 +116,12 @@ function createJsonField(element, id, rootObject) {
     case "ADDRESS":
     case "STREET":
       value = {
-        selectedAddress: "string",
-        addressLine1: "string",
-        addressLine2: "string",
-        town: "string",
-        postcode: "string",
-        placeRef: "string",
+        SelectedAddress: "string",
+        AddressLine1: "string",
+        AddressLine2: "string",
+        Town: "string",
+        Postcode: "string",
+        PlaceRef: "string",
       };
       break;
     case "DOCUMENTUPLOAD":
@@ -129,28 +129,28 @@ function createJsonField(element, id, rootObject) {
     case "MULTIPLEFILEUPLOAD":
       value = [
         {
-          trustedOriginalFileName: "string",
-          content: "string",
-          untrustedOriginalFileName: "string",
-          keyName: "string",
+          TrustedOriginalFileName: "string",
+          Content: "string",
+          UntrustedOriginalFileName: "string",
+          KeyName: "string",
         },
       ];
       break;
     case "BOOKING":
       value = {
-        id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        date: "2021-06-14T14:16:16.539Z",
-        startTime: "2021-06-14T14:16:16.539Z",
-        endTime: "2021-06-14T14:16:16.539Z",
-        location: "string",
+        Id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        Date: "2021-06-14T14:16:16.539Z",
+        StartTime: "2021-06-14T14:16:16.539Z",
+        EndTime: "2021-06-14T14:16:16.539Z",
+        Location: "string",
       };
       break;
     case "MAP":
       value = {
-        siteCode: "string",
-        assetId: "string",
-        easting: "string",
-        northing: "string",
+        SiteCode: "string",
+        AssetId: "string",
+        Easting: "string",
+        Northing: "string",
       };
       break;
     case "SUMMARY":
