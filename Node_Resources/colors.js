@@ -9,6 +9,7 @@ module.exports = {
   COMMAND: "\x1b[95m",
   MODIFIER: "\x1b[92m",
   WARNING: "\x1b[33m",
+  ALERT: "\x1b[36m",
   HIGH_PRIORITY: "\x1b[91m",
   MED_PRIORITY: "\x1b[33m",
   LOW_PRIORITY: "\x1b[92m",

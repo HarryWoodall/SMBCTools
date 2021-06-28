@@ -18,6 +18,14 @@ function smbcinit {
     npm i $SMBC_TOOLS/Node_Resources;
 }
 
+function table() {
+    ARGS="";
+    for ELEMENT in "$@"; do
+        ARGS+=" \"${ELEMENT}\""
+    done
+    $NODE_COMMAND 'table' $ARGS $WORK_DIR;
+}
+
 function trivia() {
     ARGS="";
     for ELEMENT in "$@"; do

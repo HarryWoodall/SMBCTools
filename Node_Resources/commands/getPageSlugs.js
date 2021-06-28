@@ -49,6 +49,9 @@ module.exports = function (args, res) {
 function displayRoute(page, map) {
   if (page.Behaviours) {
     page.Behaviours.forEach((behaviour, index) => {
+      const pageSlug = page[Object.keys(page).find((key) => key.toLowerCase() === "pageslug")];
+      const behaviourSlug = behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "pageslug")];
+
       if (behaviour.conditions && behaviour.conditions.length == 1) {
         const condition = behaviour.conditions[0];
         const questionId = condition[Object.keys(condition).find((key) => key.toLowerCase() === "questionId".toLowerCase())];
@@ -56,14 +59,14 @@ function displayRoute(page, map) {
         const comparisonValue = condition[Object.keys(condition).find((key) => key.toLowerCase() === "comparisonValue".toLowerCase())];
 
         console.log(
-          `  if ${colors.ROUTE_QUESTIONID}${questionId}${colors.ROUTE_PAGE_SLUG}${map[questionId] !== page.PageSlug ? "[" + map[questionId] + "]" : ""} ${
+          `  if ${colors.ROUTE_QUESTIONID}${questionId}${colors.ROUTE_PAGE_SLUG}${map[questionId] !== pageSlug ? "[" + map[questionId] + "]" : ""} ${
             colors.ROUTE_CONDITION_TYPE
           }${conditionType} ${colors.ROUTE_COMPARISON_VALUE}${comparisonValue}${colors.RESET}`
         );
-        console.log(`    ${colors.ROUTE_BEHAVIOUR_TYPE}${behaviour.behaviourType}${colors.RESET} ${behaviour.PageSlug}`);
+        console.log(`    ${colors.ROUTE_BEHAVIOUR_TYPE}${behaviour.behaviourType}${colors.RESET} ${behaviourSlug}`);
         if (index < page.Behaviours.length - 1) console.log();
       } else {
-        console.log(`  ${colors.ROUTE_BEHAVIOUR_TYPE}${behaviour.behaviourType}${colors.RESET} ${behaviour.PageSlug}`);
+        console.log(`  ${colors.ROUTE_BEHAVIOUR_TYPE}${behaviour.behaviourType}${colors.RESET} ${behaviourSlug}`);
       }
     });
     console.log();
@@ -90,9 +93,13 @@ function displayElements(page) {
 
 function displayHelp() {
   console.log(`
-    slugs ${colors.COMMAND}<form-name>${colors.RESET} ${colors.MODIFIER}<?modifier>${colors.RESET}
+    slugs ${colors.MODIFIER}<?modifier>${colors.RESET} ${colors.COMMAND}<form-name>${colors.RESET} 
 
     Outputs all page slugs of the JSON file,
-    Can be modified with ${colors.MODIFIER}-s${colors.RESET} to add linebreaks
+
+    Can be modified with: 
+      ${colors.MODIFIER}-s${colors.RESET} to add linebreaks
+      ${colors.MODIFIER}-e${colors.RESET} to show element questionIds
+      ${colors.MODIFIER}-routes${colors.RESET} to show links to other pages (with conditions)
       `);
 }

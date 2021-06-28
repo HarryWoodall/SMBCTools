@@ -4,8 +4,8 @@ const fetch = require("node-fetch");
 const { decode } = require("html-entities");
 
 const categoryMap = {
-  any: "any",
-  GeneralKnowladge: 9,
+  Any: 1,
+  GeneralKnowledge: 9,
   Books: 10,
   Film: 11,
   Music: 12,
@@ -34,7 +34,10 @@ const categoryMap = {
 module.exports = async function (args, res) {
   let baseURL = "https://opentdb.com/api.php?amount=10";
 
-  if (!args || args.length < 1) getTrivia(baseURL, Object.keys(categoryMap)[Math.floor(Math.random() * 22) + 1], res);
+  if (!args || args.length < 1) {
+    getTrivia(baseURL, Object.keys(categoryMap)[Math.floor(Math.random() * 24)], res);
+    return;
+  }
 
   args.forEach((arg) => {
     switch (arg) {
@@ -42,7 +45,7 @@ module.exports = async function (args, res) {
         listCategories();
         break;
       default:
-        key = categoryMap[arg] ? arg : Object.keys(categoryMap)[Math.floor(Math.random() * 22) + 1];
+        key = categoryMap[arg] ? arg : Object.keys(categoryMap)[Math.floor(Math.random() * 24)];
         getTrivia(baseURL, key, res);
         break;
     }
@@ -50,17 +53,16 @@ module.exports = async function (args, res) {
 };
 
 async function getTrivia(baseURL, category, res) {
-  console.log(`Category: ${category}`);
-  baseURL += `&category=${categoryMap[category]}`;
   const questionsFile = `${res}/triviaQuestions.txt`;
   const answersFile = `${res}/triviaAnswers.txt`;
+
+  if (category.toLowerCase() != "any") baseURL += `&category=${categoryMap[category]}`;
+  console.log(`Category: ${category}`);
 
   await fetch(baseURL)
     .then((response) => response.json())
     .then((data) => {
-      questions = writeQuestions(data);
-      answers = writeAnswers(data);
-      fs.writeFileSync(questionsFile, questions);
+      fs.writeFileSync(questionsFile, writeQuestions(data));
       fs.writeFileSync(answersFile, writeAnswers(data));
     });
 
@@ -70,8 +72,8 @@ async function getTrivia(baseURL, category, res) {
 
 function listCategories() {
   console.log();
-  for (const [key, value] of Object.entries(categoryMap)) {
-    if (key != "any") console.log(`  ${key}`);
+  for (const [key] of Object.entries(categoryMap)) {
+    console.log(`  ${key}`);
   }
 }
 

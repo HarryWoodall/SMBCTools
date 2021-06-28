@@ -151,9 +151,17 @@ function cleanPageSlug(slug) {
 
 function displayHelp() {
   console.log(`
-    validate ${colors.COMMAND}<form-name>${colors.RESET}
+    flow ${colors.COMMAND}<form-name>${colors.RESET}
 
-    Validates the JSON file, checks for:
-      - Duplicate ids
-      - Empty ids`);
+      Generates a flow diagram of the form flow
+
+      Will display errors concerning: 
+         - Links to pages that don't exsist
+         - Pages that cannot be reached
+
+         
+    ${colors.ALERT}NOTE:${colors.RESET} This command assumes the user has installed
+    Typora and is the default program to open '.md' 
+    files with
+      `);
 }
