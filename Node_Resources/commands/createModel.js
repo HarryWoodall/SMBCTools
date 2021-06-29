@@ -164,7 +164,6 @@ function createJsonField(element, id, rootObject) {
 
   if (value) {
     if (id.includes(".")) {
-      value = {};
       let objects = id.split(".");
       id = objects.shift();
 
@@ -172,7 +171,7 @@ function createJsonField(element, id, rootObject) {
         if (index == 0) {
           if (!rootObject[id]) rootObject[id] = {};
 
-          rootObject[id][item] = "string";
+          rootObject[id][item] = value;
         } else {
           // TODO, if objet has more than 1 layer deep
           // e.g date.time.second
