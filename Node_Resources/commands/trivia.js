@@ -32,7 +32,7 @@ const categoryMap = {
 };
 
 module.exports = async function (args, res) {
-  let baseURL = "https://opentdb.com/api.php?amount=10";
+  let baseURL = "https://opentdb.com/api.php?amount=5";
 
   if (!args || args.length < 1) {
     getTrivia(baseURL, Object.keys(categoryMap)[Math.floor(Math.random() * 24)], res);
