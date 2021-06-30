@@ -221,8 +221,12 @@ function displayHelp() {
   console.log(`
     model ${colors.COMMAND}<form-name>${colors.RESET}
 
-    Creates the C# model of a json form.
+      Creates the C# model of a json form.
 
-    Not always accurate as it does assume all elements 
-    that can be used, are used.`);
+      Assume all elements 
+      that can be used, are used.
+    
+    model ${colors.MODIFIER}-j${colors.RESET} ${colors.COMMAND}<form-name>${colors.RESET}
+    
+      Creates a dummy JSON payload of the form`);
 }
