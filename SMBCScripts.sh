@@ -17,6 +17,13 @@ NODE_COMMAND="node --no-warnings $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS
 function smbcinit {
     npm i $SMBC_TOOLS/Node_Resources;
 }
+function table() {
+    ARGS="";
+    for ELEMENT in "$@"; do
+        ARGS+=" \"${ELEMENT}\""
+    done
+    $NODE_COMMAND 'table' $ARGS $WORK_DIR;
+}
 
 function trivia() {
     ARGS="";
