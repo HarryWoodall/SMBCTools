@@ -1,11 +1,5 @@
 # SMBCTools
 
-
-
-## Description
-
-Comming soon...
-
 ## Installation
 
 Inside `.bash_profile` create a variable called `SMBC_TOOLS` and assign it the absolute path of this repo. Also needed is a variable called `WORK_DIR` which is a reference to your code directory. Below this, add the `SMBCScripts.sh` file as a source.
