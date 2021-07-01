@@ -14,15 +14,15 @@ module.exports = function (args, res) {
    * the form name from the arguments
    */
   const wkDir = args.pop();
-  let form = args.pop();
+  let formName = args.pop();
 
   /**
    * If argument given does not have valid
    * file ending, give it one.
    * Then create the complete file path
    */
-  if (form.slice(-5) !== ".json") form += ".json";
-  const fileSource = `${wkDir}/form-builder-json/v2/${form}`;
+  if (formName.slice(-5) !== ".json") formName += ".json";
+  const fileSource = `${wkDir}/form-builder-json/v2/${formName}`;
 
   /**
    * If the form exists, load it into
@@ -33,16 +33,12 @@ module.exports = function (args, res) {
       let file = fs.readFileSync(fileSource).toString().trim();
       let form = JSON.parse(file);
 
-      /*
-       * Your Code goes below here
-       */
-
-
-      
+      //Your Code goes below here
 
       /**
        * Write data into a temp file
-       * and open it up.
+       * and open it up. At the moment it
+       * just outputs the form name
        */
       fs.writeFileSync(`${res}/exampleOutput.md`, form.FormName);
       open(`${res}/exampleOutput.md`);

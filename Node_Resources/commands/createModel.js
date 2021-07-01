@@ -122,6 +122,7 @@ function createJsonField(element, id, rootObject) {
         Town: "string",
         Postcode: "string",
         PlaceRef: "string",
+        IsAutomaticallyFound: true,
       };
       break;
     case "DOCUMENTUPLOAD":
@@ -164,7 +165,6 @@ function createJsonField(element, id, rootObject) {
 
   if (value) {
     if (id.includes(".")) {
-      value = {};
       let objects = id.split(".");
       id = objects.shift();
 
@@ -172,7 +172,7 @@ function createJsonField(element, id, rootObject) {
         if (index == 0) {
           if (!rootObject[id]) rootObject[id] = {};
 
-          rootObject[id][item] = "string";
+          rootObject[id][item] = value;
         } else {
           // TODO, if objet has more than 1 layer deep
           // e.g date.time.second
@@ -221,8 +221,12 @@ function displayHelp() {
   console.log(`
     model ${colors.COMMAND}<form-name>${colors.RESET}
 
-    Creates the C# model of a json form.
+      Creates the C# model of a json form.
 
-    Not always accurate as it does assume all elements 
-    that can be used, are used.`);
+      Assume all elements 
+      that can be used, are used.
+    
+    model ${colors.MODIFIER}-j${colors.RESET} ${colors.COMMAND}<form-name>${colors.RESET}
+    
+      Creates a dummy JSON payload of the form`);
 }

@@ -9,6 +9,8 @@
   "author": "Harry Woodall",
   "license": "ISC",
   "dependencies": {
+    "html-entities": "^2.3.2",
+    "node-fetch": "^2.6.1",
     "open": "^8.0.4",
     "remove-markdown": "^0.3.0"
   }

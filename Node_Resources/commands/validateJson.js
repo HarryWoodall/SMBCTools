@@ -27,11 +27,13 @@ module.exports = function (args, res) {
       let nullValues = [];
       for (let page of form.Pages) {
         for (let element of page.Elements) {
-          const questionId = element.Properties[Object.keys(element.Properties).find((key) => key.toLowerCase() === "questionId".toLowerCase())];
+          const questionId = element.Properties[Object.keys(element.Properties).find((key) => key.toLowerCase() === "questionid")];
 
-          if (questionId) {
+          if (!(questionId == null || questionId == undefined)) {
             if (questionId == "") {
-              nullValues.push(questionId);
+              const pageSlug = page[Object.keys(page).find((key) => key.toLowerCase() === "pageslug")];
+              const type = element[Object.keys(element).find((key) => key.toLowerCase() === "type")];
+              nullValues.push({ PageSlug: pageSlug, Type: type });
             } else if (questionIds.includes(questionId)) {
               duplicates.push(questionId);
             } else {
