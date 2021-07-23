@@ -5,5 +5,6 @@ module.exports = {
   slugs: require("./commands/getPageSlugs"),
   flow: require("./commands/formFlow"),
   trivia: require("./commands/trivia"),
-  table: require("./commands/commandTemplate"),
+  table: require("./commands/tableForm"),
+  PA: require("./commands/powerAutomate"),
 };

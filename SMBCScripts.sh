@@ -18,6 +18,15 @@ function smbcinit {
     cd "$SMBC_TOOLS/Node_Resources";
     npm i;
 }
+
+function pa() {
+    ARGS="";
+    for ELEMENT in "$@"; do
+        ARGS+=" \"${ELEMENT}\""
+    done
+    $NODE_COMMAND 'PA' $ARGS $WORK_DIR;
+}
+
 function table() {
     ARGS="";
     for ELEMENT in "$@"; do
