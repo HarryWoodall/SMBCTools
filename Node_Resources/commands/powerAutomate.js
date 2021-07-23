@@ -63,22 +63,22 @@ function convertPageElements(page, array) {
 
 function createArrayObjects(array, type, questionid) {
   const result = {};
-  let key = "";
-  let value = "";
+  let value;
   switch (type.toUpperCase()) {
     case "ADDRESS":
     case "STREET":
-      key = formatQuestionId(questionid);
-      value += `@{triggerBody()?['${questionid}']?['SelectedAddress']} @{triggerBody()?['${questionid}']?['AddressLine1']} @{triggerBody()?['${questionid}']?['AddressLine2']} @{triggerBody()?['${questionid}']?['Town']} @{triggerBody()?['${questionid}']?['Postcode']}`;
+      value = `@{triggerBody()?['${questionid}']?['SelectedAddress']} @{triggerBody()?['${questionid}']?['AddressLine1']} @{triggerBody()?['${questionid}']?['AddressLine2']} @{triggerBody()?['${questionid}']?['Town']} @{triggerBody()?['${questionid}']?['Postcode']}`;
       break;
-
+    case "DATEPICKER":
+    case "DATEINPUT":
+      value = `@{formatDateTime(triggerBody()['${questionid}'], 'dd/MM/yyyy')}`;
+      break;
     default:
-      key = formatQuestionId(questionid);
       value = `@{triggerBody()?['${questionid}']}`;
       break;
   }
 
-  result["Key"] = key;
+  result["Key"] = formatQuestionId(questionid);
   result["Value"] = value;
   array.push(result);
 
@@ -97,7 +97,5 @@ function formatQuestionId(id) {
       formattedString += char;
     }
   });
-
-  console.log(formattedString);
   return formattedString;
 }
