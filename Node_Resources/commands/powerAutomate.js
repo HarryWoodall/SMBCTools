@@ -1,6 +1,8 @@
 const fs = require("fs");
 const open = require("open");
 
+const ignoredTypes = ["summary"];
+
 let workDirectory;
 
 module.exports = function (args, res) {
@@ -42,26 +44,44 @@ function convertPageElements(page, array) {
   const elements = page[Object.keys(page).find((key) => key.toLowerCase() === "elements")];
 
   elements.forEach((element) => {
-    result = {};
-    let type = element[Object.keys(element).find((key) => key.toLowerCase() === "type")];
-    const properties = element[Object.keys(element).find((key) => key.toLowerCase() === "properties")];
-    const questionid = properties[Object.keys(properties).find((key) => key.toLowerCase() === "questionid")];
+    let properties;
+    let questionid;
+    let summaryLabel;
+    if (element[Object.keys(element).find((key) => key.toLowerCase() === "type")].toLowerCase() == "reusable") {
+      properties = element[Object.keys(element).find((key) => key.toLowerCase() === "properties")];
+      questionid = properties[Object.keys(properties).find((key) => key.toLowerCase() === "questionid")];
+      summaryLabel = properties[Object.keys(properties).find((key) => key.toLowerCase() === "summarylabel")];
 
-    if (type.toLowerCase() == "reusable") {
       const ref = element[Object.keys(element).find((key) => key.toLowerCase() === "elementref")];
       const refElement = JSON.parse(fs.readFileSync(`${workDirectory}/form-builder-json/Elements/${ref}.json`).toString().trim());
-      type = refElement[Object.keys(refElement).find((key) => key.toLowerCase() === "type")];
+
+      element = refElement;
     }
 
-    if (questionid) {
-      array = createArrayObjects(array, type, questionid);
+    let type = element[Object.keys(element).find((key) => key.toLowerCase() === "type")];
+    if (!ignoredTypes.includes(type.toLowerCase())) {
+      properties = element[Object.keys(element).find((key) => key.toLowerCase() === "properties")];
+      questionid = questionid || properties[Object.keys(properties).find((key) => key.toLowerCase() === "questionid")];
+      summaryLabel = summaryLabel || properties[Object.keys(properties).find((key) => key.toLowerCase() === "summarylabel")];
+
+      let label = properties[Object.keys(properties).find((key) => key.toLowerCase() === "label")];
+
+      if (element[Object.keys(element).find((key) => key.toLowerCase() == "type")].toLowerCase() == "address" && !label) {
+        label = page[Object.keys(page).find((key) => key.toLowerCase() === "title")];
+      }
+
+      if (summaryLabel) label = summaryLabel;
+
+      if (questionid) {
+        array = appendArrayObjects(array, type, questionid, label);
+      }
     }
   });
 
   return array;
 }
 
-function createArrayObjects(array, type, questionid) {
+function appendArrayObjects(array, type, questionid, label) {
   const result = {};
   let value;
   switch (type.toUpperCase()) {
@@ -78,7 +98,7 @@ function createArrayObjects(array, type, questionid) {
       break;
   }
 
-  result["Key"] = formatQuestionId(questionid);
+  result["Key"] = label || formatQuestionId(questionid);
   result["Value"] = value;
   array.push(result);
 

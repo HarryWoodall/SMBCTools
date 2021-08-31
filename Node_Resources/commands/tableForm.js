@@ -30,6 +30,12 @@ const propertyMapping = {
   type: { name: "Type", value: "type", level: "elements", needsId: true, handleStore: storeType, handleRender: renderType },
 };
 
+const propertyTemplates = {
+  testing: ["slug", "id", "type"],
+  validation: ["label", "validation"],
+};
+propertyTemplates["default"] = propertyTemplates.testing;
+
 let workDirectory;
 
 module.exports = function (args, res) {
@@ -40,7 +46,7 @@ module.exports = function (args, res) {
   const wkDir = args.pop();
   let formName = args.shift();
 
-  properties = args.length ? args : ["label", "validation"];
+  properties = setProperties(args);
 
   workDirectory = wkDir;
 
@@ -214,4 +220,11 @@ function isEmptyPage(pageData) {
     }
   }
   return true;
+}
+
+function setProperties(args) {
+  if (args.length < 1) return propertyTemplates.default;
+  if (propertyTemplates[args[0]]) return propertyTemplates[args[0]];
+
+  return args;
 }
