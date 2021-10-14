@@ -22,7 +22,7 @@ module.exports = function (args, res) {
    * Then create the complete file path
    */
   if (formName.slice(-5) !== ".json") formName += ".json";
-  const fileSource = `${wkDir}/form-builder-json/v2/${formName}`;
+  const fileSource = `${wkDir}/form-builder-json/DSL/${formName}`;
 
   /**
    * If the form exists, load it into

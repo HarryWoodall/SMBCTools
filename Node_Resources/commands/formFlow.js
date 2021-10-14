@@ -25,7 +25,7 @@ module.exports = function (args, res) {
   const wkDir = args[1];
 
   if (form.slice(-5) !== ".json") form += ".json";
-  const fileSource = `${wkDir}/form-builder-json/v2/${form}`;
+  const fileSource = `${wkDir}/form-builder-json/DSL/${form}`;
 
   try {
     if (fs.existsSync(fileSource)) {

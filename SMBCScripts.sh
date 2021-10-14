@@ -107,9 +107,9 @@ function addjson() {
     addjson <${MODIFIER_COLOR}?modifier...${NC}>
 
         addjson updates non UI files in your DSL folder in form builder to match your 
-        V2 folder in form builder json.
+        DSL folder in form builder json.
         This will only modify files in DSL, keeping a single point of truth.
-        Files that exist in v2 but not in DSL will not be copied over.
+        Files that exist in DSL but not in DSL will not be copied over.
 
             ${MODIFIER_COLOR}-p${NC} -- Will perform a fresh pull of form-builder-json before copying files.
             
@@ -120,7 +120,7 @@ function addjson() {
             ${MODIFIER_COLOR}-f${NC} -- Will set all AddressProviders and StreetProviders to fake inside the DSL 
                   after copy has completed
 
-        Updates will only be made if files in DSL and v2 are different.
+        Updates will only be made if files in DSL and DSL are different.
         Multiple parameters can be used in a single command, and in any order.
 
         ${WARNING_COLOR}WARNING${NC}: This command will overide any changes made to non UI files made in DSL.
@@ -168,9 +168,9 @@ function addjson() {
             return 1;
         fi
 
-        if [ -f "$WORK_DIR/form-builder-json/v2/$cpyFile" ]; then
+        if [ -f "$WORK_DIR/form-builder-json/DSL/$cpyFile" ]; then
             echo "Copying $cpyFile over to form-builder";
-            cp $WORK_DIR/form-builder-json/v2/$cpyFile $WORK_DIR/form-builder/src/DSL/$cpyFile;
+            cp $WORK_DIR/form-builder-json/DSL/$cpyFile $WORK_DIR/form-builder/src/DSL/$cpyFile;
             echo "Copied Successfully";
             return 0;
         fi
@@ -188,9 +188,9 @@ function addjson() {
     # Iterate over non UI files in form-builder and update any that are different
     find $WORK_DIR/form-builder/src/DSL/ -maxdepth 1 -not -name *UI-* -type f | while read fbname; do
         NAME=$(basename $fbname);
-        fbjname=$WORK_DIR/form-builder-json/v2/$NAME;
+        fbjname=$WORK_DIR/form-builder-json/DSL/$NAME;
         if [ -f "$fbjname" ] && [ $(date -r "$fbjname" '+%s') -gt $LAST_RUN ]; then
-        # find $WORK_DIR/form-builder-json/v2 -maxdepth 1 -name $NAME -type f | while read fbjname; do
+        # find $WORK_DIR/form-builder-json/DSL -maxdepth 1 -name $NAME -type f | while read fbjname; do
             flag=0;
             if [ "! cmp -s $fbname $fbjname" ]; then
                 # Copy the file
@@ -222,11 +222,11 @@ function addjson() {
 function formTest() {
     if [ $# == 2 ]; then
         if [ $1 == "int" ]; then
-            start chrome "https://int-formbuilder-origin.smbcdigital.net/v2/$2";
+            start chrome "https://int-formbuilder-origin.smbcdigital.net/DSL/$2";
         elif [ $1 == "qa" ]; then
-            start chrome "https://qa-formbuilder-origin.smbcdigital.net/v2/$2";
+            start chrome "https://qa-formbuilder-origin.smbcdigital.net/DSL/$2";
         elif [ $1 == "stage" ]; then
-            start chrome "https://stage-formbuilder-origin.smbcdigital.net/v2/$2";
+            start chrome "https://stage-formbuilder-origin.smbcdigital.net/DSL/$2";
         fi
     fi
 }
