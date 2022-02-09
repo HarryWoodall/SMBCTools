@@ -158,12 +158,19 @@ function createJsonField(element, id, rootObject) {
     case "LINK":
       value = null;
       break;
+    case "TEXTBOX":
+      if (element.Properties[Object.keys(element.Properties).find((key) => key.toLowerCase() === "numeric".toLowerCase())]) {
+        value = 0;
+      } else {
+        value = "string";
+      }
+      break;
     default:
       value = "string";
       break;
   }
 
-  if (value) {
+  if (value || value == 0) {
     if (id.includes(".")) {
       let objects = id.split(".");
       id = objects.shift();
