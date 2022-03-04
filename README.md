@@ -19,8 +19,11 @@ smbcinit
 ```
 
 > Note: The 'flow' command was written to use [Typora](https://typora.io/) as a mark down viewer. If you wish to use that command, please download it and set it as your default markdown viewer
+> 
+> **Update**: Typora now requires payment to use. An open source alternative is [Mark Text](https://marktext.app/)
 
 ## Usage
+
 List of commands
 
 - addjson
