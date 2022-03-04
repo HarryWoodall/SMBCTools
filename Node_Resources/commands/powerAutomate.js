@@ -2,6 +2,7 @@ const fs = require("fs");
 const open = require("open");
 
 let workDirectory;
+let modifier;
 
 module.exports = function (args, res) {
   if (args.length < 2) {
@@ -10,6 +11,7 @@ module.exports = function (args, res) {
   }
   const wkDir = args.pop();
   let formName = args.pop();
+  modifier = args.pop();
 
   workDirectory = wkDir;
 
@@ -46,6 +48,7 @@ function convertPageElements(page, array) {
     let type = element[Object.keys(element).find((key) => key.toLowerCase() === "type")];
     const properties = element[Object.keys(element).find((key) => key.toLowerCase() === "properties")];
     const questionid = properties[Object.keys(properties).find((key) => key.toLowerCase() === "questionid")];
+    const label = properties[Object.keys(properties).find((key) => key.toLowerCase() === "label")];
 
     if (type.toLowerCase() == "reusable") {
       const ref = element[Object.keys(element).find((key) => key.toLowerCase() === "elementref")];
@@ -54,14 +57,18 @@ function convertPageElements(page, array) {
     }
 
     if (questionid) {
-      array = createArrayObjects(array, type, questionid);
+      if (modifier == "-labels" && label) {
+        array = createArrayObjects(array, type, questionid, label);
+      } else {
+        array = createArrayObjects(array, type, questionid);
+      }
     }
   });
 
   return array;
 }
 
-function createArrayObjects(array, type, questionid) {
+function createArrayObjects(array, type, questionid, label = null) {
   const result = {};
   let value;
   switch (type.toUpperCase()) {
@@ -78,7 +85,7 @@ function createArrayObjects(array, type, questionid) {
       break;
   }
 
-  result["Key"] = formatQuestionId(questionid);
+  result["Key"] = label ? label : formatQuestionId(questionid);
   result["Value"] = value;
   array.push(result);
 
