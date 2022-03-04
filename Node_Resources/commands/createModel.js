@@ -4,6 +4,7 @@ const colors = require("../colors");
 
 let resources;
 const fields = [];
+const extraObjects = [];
 
 module.exports = function (args, res) {
   if (args.length < 1) {
@@ -44,6 +45,7 @@ module.exports = function (args, res) {
           }
         }
       }
+
       if (!modifier) {
         writeToFile();
       } else if (modifier == "-j") {
@@ -89,6 +91,10 @@ function createField(element, id) {
     case "LINK":
       type = null;
       break;
+    case "ADDANOTHER":
+      type = `List<${createAddAnotherType(element)}>`;
+      createAddAnotherObject(element);
+      break;
     default:
       type = "string";
       break;
@@ -103,6 +109,40 @@ function createField(element, id) {
     }
 
     return { type: type, id: id };
+  }
+}
+
+function createAddAnotherType(element) {
+  let id = element.Properties[Object.keys(element.Properties).find((key) => key.toLowerCase() === "questionId".toLowerCase())];
+  id = id.charAt(0).toUpperCase() + id.slice(1);
+
+  if (id.includes(".")) id = id.split(".")[0];
+
+  return id;
+}
+
+function createAddAnotherObject(addAnotherElement, modifier = null) {
+  const elements = addAnotherElement.Properties[Object.keys(addAnotherElement.Properties).find((key) => key.toLowerCase() === "elements")];
+
+  extraObject = { id: createAddAnotherType(addAnotherElement), fields: [] };
+  extraObjects.push(extraObject);
+
+  for (let element of elements) {
+    const targetMapping = element.Properties[Object.keys(element.Properties).find((key) => key.toLowerCase() === "targetmapping")];
+    const questionId = element.Properties[Object.keys(element.Properties).find((key) => key.toLowerCase() === "questionid")];
+
+    if (!modifier) {
+      let field = createField(element, targetMapping || questionId);
+      addExtraObjectsField(questionId, field, extraObject);
+    } else if (modifier == "-j") {
+      createJsonField(element, targetMapping || questionId, object);
+    }
+  }
+}
+
+function addExtraObjectsField(id, field, extraObject) {
+  if (field && !fields.find((element) => element.id == field.id)) {
+    extraObject.fields.push(field);
   }
 }
 
@@ -159,11 +199,10 @@ function createJsonField(element, id, rootObject) {
       value = null;
       break;
     case "TEXTBOX":
-      if (element.Properties[Object.keys(element.Properties).find((key) => key.toLowerCase() === "numeric".toLowerCase())]) {
-        value = 0;
-      } else {
-        value = "string";
-      }
+      value = handelNumericValues(element);
+      break;
+    case "ADDANOTHER":
+      value = createAddAnotherJsonField(element);
       break;
     default:
       value = "string";
@@ -191,6 +230,43 @@ function createJsonField(element, id, rootObject) {
   }
 }
 
+function createAddAnotherJsonField(addAnotherElement) {
+  let addAnother = [];
+
+  const elements = addAnotherElement.Properties[Object.keys(addAnotherElement.Properties).find((key) => key.toLowerCase() === "elements")];
+
+  for (let element of elements) {
+    let addAnotherField = {};
+    const targetMapping = element.Properties[Object.keys(element.Properties).find((key) => key.toLowerCase() === "TargetMapping".toLowerCase())];
+    const questionId = element.Properties[Object.keys(element.Properties).find((key) => key.toLowerCase() === "questionId".toLowerCase())];
+
+    createJsonField(element, targetMapping || questionId, addAnotherField);
+    addAnother.push(addAnotherField);
+  }
+
+  return addAnother;
+}
+
+function handelNumericValues(element) {
+  const numericKeys = ["numeric", "decimal"];
+
+  if (element.Properties[Object.keys(element.Properties).find((key) => numericKeys.includes(key.toLowerCase()))]) {
+    switch (
+      Object.keys(element.Properties)
+        .find((key) => numericKeys.includes(key.toLowerCase()))
+        .toLowerCase()
+    ) {
+      case "decimal":
+        const dp = element.Properties[Object.keys(element.Properties).find((key) => key.toLowerCase() === "decimalplaces")] || 2;
+        return parseFloat(Math.PI.toFixed(dp));
+      case "numeric":
+        return 0;
+    }
+  } else {
+    return "string";
+  }
+}
+
 function addField(field, modifier) {
   if (field && !modifier && !fields.find((element) => element.id == field.id)) {
     fields.push(field);
@@ -209,6 +285,18 @@ function writeToFile() {
   }
 
   data += "}";
+
+  if (extraObjects.length > 0) {
+    for (let item of extraObjects) {
+      data += `\n\n[${item.id}]\r\n{\r\n`;
+
+      item.fields.forEach((field) => {
+        data += `\tpublic ${field.type} ${field.id} { get; set; }\r\n`;
+      });
+
+      data += "}";
+    }
+  }
 
   fs.writeFile(`${resources}/model.txt`, data, () => {
     open(`${resources}/model.txt`, { wait: false });
