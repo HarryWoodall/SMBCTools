@@ -67,10 +67,10 @@ async function generateFlow(pages, name, startPage) {
 function addFlow(page, content, startPage) {
   if (page.Behaviours) {
     page.Behaviours.forEach((behaviour) => {
-      const pageSlug =
-        behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "behaviourtype")].toLowerCase() == "submitform"
-          ? "success"
-          : behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "pageslug")];
+      const submitBehaviors = ["submitfor", "submitandpay", "submitandredirect"];
+      const pageSlug = submitBehaviors.includes(behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "behaviourtype")].toLowerCase())
+        ? "success"
+        : behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "pageslug")];
 
       if (behaviour.conditions && behaviour.conditions.length == 1) {
         const condition = behaviour.conditions[0];
@@ -78,13 +78,13 @@ function addFlow(page, content, startPage) {
         const conditionType = condition[Object.keys(condition).find((key) => key.toLowerCase() === "conditiontype")];
         const comparisonValue = condition[Object.keys(condition).find((key) => key.toLowerCase() === "comparisonvalue")];
 
-        content += `${cleanPageSlug(page.PageSlug)}${
+        content += `${cleanString(page.PageSlug)}${
           !isPointedTo(startPage, page.PageSlug) ? ":::dangling" : ""
-        } -- ${questionId}<br>${conditionType}<br>${comparisonValue} --> ${cleanPageSlug(pageSlug)}${!isPointedTo(startPage, pageSlug) ? ":::dangling" : ""}${
-          !hasPage(pageSlug) ? ":::missing" : ""
-        }\n`;
+        } -- ${questionId}<br>${conditionType}<br>${cleanString(comparisonValue)} --> ${cleanString(pageSlug)}${
+          !isPointedTo(startPage, pageSlug) ? ":::dangling" : ""
+        }${!hasPage(pageSlug) ? ":::missing" : ""}\n`;
       } else {
-        content += `${cleanPageSlug(page.PageSlug)}${!isPointedTo(startPage, page.PageSlug) ? ":::dangling" : ""} --> ${cleanPageSlug(pageSlug)}${
+        content += `${cleanString(page.PageSlug)}${!isPointedTo(startPage, page.PageSlug) ? ":::dangling" : ""} --> ${cleanString(pageSlug)}${
           !isPointedTo(startPage, pageSlug) ? ":::dangling" : ""
         }${!hasPage(pageSlug) ? ":::missing" : ""}\n`;
       }
@@ -145,8 +145,8 @@ function buildPageMap(pages) {
   });
 }
 
-function cleanPageSlug(slug) {
-  return slug.replace(/-end/g, "-ends");
+function cleanString(slug) {
+  return slug.replace(/-end/g, "-ends").replaceAll(/[(]/g, "").replaceAll(/[)]/g, "");
 }
 
 function displayHelp() {
