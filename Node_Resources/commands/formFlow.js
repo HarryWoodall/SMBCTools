@@ -126,10 +126,10 @@ function addToReachableMap(page, map, visitedPages) {
 
   if (page.Behaviours) {
     page.Behaviours.forEach((behaviour) => {
-      const pageSlug =
-        behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "behaviourtype")].toLowerCase() == "submitform"
-          ? "success"
-          : behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "pageslug")];
+      const submitBehaviors = ["submitfor", "submitandpay", "submitandredirect"];
+      const pageSlug = submitBehaviors.includes(behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "behaviourtype")].toLowerCase())
+        ? "success"
+        : behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "pageslug")];
 
       if (pageMap[pageSlug]) {
         addToReachableMap(pageMap[pageSlug], map, visitedPages);
