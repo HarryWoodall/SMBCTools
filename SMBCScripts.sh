@@ -112,7 +112,7 @@ function addjson() {
         Files that exist in DSL but not in DSL will not be copied over.
 
             ${MODIFIER_COLOR}-p${NC} -- Will perform a fresh pull of form-builder-json before copying files.
-            
+
             ${MODIFIER_COLOR}-e${NC} -- Will also copy the 'Elements' folder
 
             ${MODIFIER_COLOR}-l${NC} -- Will also copy the 'Lookups' folder
@@ -148,6 +148,10 @@ function addjson() {
 
         if [ $arg == "-l" ]; then
             __updateLookups;
+        fi
+
+        if [ $arg == "-pc" ]; then
+            __updatePaymentConfig;
         fi
 
         # Appending -f will set all AddressProviders to fake 
@@ -196,14 +200,14 @@ function addjson() {
                 # Copy the file
                 echo "Copying $(basename $fbjname) over to form-builder"; 
                 cp $fbjname $fbname; 
-                
+
                 # Change the address provider so it can run locally.
                 if [ $fakeAddress == 1 ]; then
                     if grep -q -e '"AddressProvider": "CRM"' $fbname ; then
                         echo "Faking addresses in $NAME";
                         sed -i -e 's/"AddressProvider": "CRM"/"AddressProvider": "Fake"/g' $fbname;
                     fi
-                    
+
                     if grep -q -e '"StreetProvider": "CRM"' $fbname ; then
                         echo "Faking streets in $NAME";
                         sed -i -e 's/"StreetProvider": "CRM"/"StreetProvider": "Fake"/g' $fbname;
@@ -249,13 +253,13 @@ function __updateElements() {
             echo "Adding $(basename $NAME) to form-builder Elements"; 
             cp $elementName $fbElementName; 
         fi
-        
+
     done
 }
 
 function __updateLookups() {
     echo "Updating Lookups..."
-    
+
     find $WORK_DIR/form-builder-json/Lookups -maxdepth 1  -type f | while read lookupName; do
         NAME=$(basename $lookupName);
         fbLookupName=$WORK_DIR/form-builder/src/DSL/Lookups/$NAME
@@ -269,6 +273,26 @@ function __updateLookups() {
             echo "Adding $(basename $NAME) to form-builder Lookups"; 
             cp $lookupName $fbLookupName; 
         fi
-        
+
+    done
+}
+
+function __updatePaymentConfig() {
+    echo "Updating Payment Config..."
+
+    find $WORK_DIR/form-builder-json/payment-config -maxdepth 1  -type f | while read paymentName; do
+        NAME=$(basename $paymentName);
+        fbPaymentName=$WORK_DIR/form-builder/src/DSL/payment-config/$NAME
+
+        if [ -f $WORK_DIR/form-builder/src/DSL/payment-config/$NAME ]; then 
+            if ! cmp -s $paymentName $fbPaymentName ; then
+                echo "Copying $(basename $NAME) over to form-builder payment-config"; 
+                cp $paymentName $fbPaymentName;
+            fi
+        else
+            echo "Adding $(basename $NAME) to form-builder payment-config"; 
+            cp $paymentName $fbPaymentName; 
+        fi
+
     done
 }
