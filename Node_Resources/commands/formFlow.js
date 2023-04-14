@@ -67,7 +67,7 @@ async function generateFlow(pages, name, startPage) {
 function addFlow(page, content, startPage) {
   if (page.Behaviours) {
     page.Behaviours.forEach((behaviour) => {
-      const submitBehaviors = ["submitfor", "submitandpay", "submitandredirect"];
+      const submitBehaviors = ["submitform", "submitandpay", "submitandredirect"];
       const pageSlug = submitBehaviors.includes(behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "behaviourtype")].toLowerCase())
         ? "success"
         : behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "pageslug")];
@@ -126,7 +126,7 @@ function addToReachableMap(page, map, visitedPages) {
 
   if (page.Behaviours) {
     page.Behaviours.forEach((behaviour) => {
-      const submitBehaviors = ["submitfor", "submitandpay", "submitandredirect"];
+      const submitBehaviors = ["submitform", "submitandpay", "submitandredirect"];
       const pageSlug = submitBehaviors.includes(behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "behaviourtype")].toLowerCase())
         ? "success"
         : behaviour[Object.keys(behaviour).find((key) => key.toLowerCase() === "pageslug")];
@@ -146,7 +146,7 @@ function buildPageMap(pages) {
 }
 
 function cleanString(slug) {
-  return slug.replace(/-end/g, "-ends").replaceAll(/[(]/g, "").replaceAll(/[)]/g, "");
+  if (slug) return slug.replace(/-end/g, "-ends").replaceAll(/[(]/g, "").replaceAll(/[)]/g, "");
 }
 
 function displayHelp() {

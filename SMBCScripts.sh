@@ -117,6 +117,8 @@ function addjson() {
 
             ${MODIFIER_COLOR}-l${NC} -- Will also copy the 'Lookups' folder
 
+            ${MODIFIER_COLOR}-pc${NC} -- Will also copy the 'Payment Config' folder
+
             ${MODIFIER_COLOR}-f${NC} -- Will set all AddressProviders and StreetProviders to fake inside the DSL 
                   after copy has completed
 
