@@ -19,6 +19,14 @@ function smbcinit {
     npm i;
 }
 
+function cypressTemplate() {
+    ARGS="";
+    for ELEMENT in "$@"; do
+        ARGS+=" \"${ELEMENT}\""
+    done
+    $NODE_COMMAND 'cypressTemplate' $ARGS $WORK_DIR;
+}
+
 function pa() {
     ARGS="";
     for ELEMENT in "$@"; do
@@ -297,4 +305,19 @@ function __updatePaymentConfig() {
         fi
 
     done
+}
+
+function webapp {
+    code /c/code/iag-webapp;
+    dotnet run --project "/c/code/iag-contentapi/src/StockportContentApi" --urls=http://localhost:5000/;   
+}
+
+function startWebapp {
+    WebApp="/c/code/iag-webapp/src/StockportWebapp";
+    dotnet watch run --project $WebApp --urls=http://localhost:5001/;   
+}
+
+function startWebappGulp {
+    cd /c/code/iag-webapp/src/StockportWebapp
+    gulp watch
 }
