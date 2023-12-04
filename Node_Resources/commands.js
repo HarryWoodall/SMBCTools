@@ -7,4 +7,6 @@ module.exports = {
   trivia: require("./commands/trivia"),
   table: require("./commands/tableForm"),
   PA: require("./commands/powerAutomate"),
+  cypressTemplate: require("./commands/cypressTemplate"),
+  fbWatch: require("./commands/fbWatch"),
 };

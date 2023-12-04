@@ -19,6 +19,22 @@ function smbcinit {
     npm i;
 }
 
+function fbWatch() {
+    ARGS="";
+    for ELEMENT in "$@"; do
+        ARGS+=" \"${ELEMENT}\""
+    done
+    $NODE_COMMAND 'fbWatch' $ARGS $WORK_DIR;
+}
+
+function cypressTemplate() {
+    ARGS="";
+    for ELEMENT in "$@"; do
+        ARGS+=" \"${ELEMENT}\""
+    done
+    $NODE_COMMAND 'cypressTemplate' $ARGS $WORK_DIR;
+}
+
 function pa() {
     ARGS="";
     for ELEMENT in "$@"; do
@@ -135,6 +151,18 @@ function addjson() {
     fi
 
     fakeAddress=0;
+
+    if [ $1 == "-init" ]; then
+
+        if [ -n "$2" ]; then
+            __initFormJson $2;
+            return;
+        fi
+        
+        echo "Form name required";
+        return;
+    fi
+
     for arg in "$@"
     do
         # Appending -p It will pull form-builder-json from github
@@ -297,4 +325,31 @@ function __updatePaymentConfig() {
         fi
 
     done
+}
+
+function __initFormJson() {
+    cp $SMBC_TOOLS/Resources/form-template.json $SMBC_TOOLS/Resources/$1.json;
+    mv $SMBC_TOOLS/Resources/$1.json $WORK_DIR/form-builder-json/DSL;
+
+    sed -i "s/@FORM_URL@/$1/g" $WORK_DIR/form-builder-json/DSL/$1.json;
+
+    echo "Form $1 added to form-builder";
+}
+
+function findClasses() {
+  STOCKPORTGOV_MODULES="/c/Users/Harry/code/iag-webapp/src/StockportWebapp/wwwroot/assets/sass/stockportgov/modules"
+  STYLEGUIDE_MODULES="/c/Users/Harry/code/iag-webapp/src/StockportWebapp/wwwroot/assets/sass/StockportStyleGuide/stockport-gov/modules"
+  STOCKPORT_GOV_VIEWS="/c/Users/Harry/code/iag-webapp/src/StockportWebapp/Views/stockportgov"
+
+  if [ $# == 1 ]; then
+    myarr=($(grep -R "^\S.*{" "$STYLEGUIDE_MODULES/$1.scss"  | cut -d "/" -f15 | cut -d "{" -f1 | cut -d "." -f2 | awk '{print $0,"\n"}'))
+
+    for i in "${myarr[@]}"
+    do
+      echo $i
+      grep -R "$i" "$STOCKPORT_GOV_VIEWS" | awk '{print $0}'
+    done
+  else
+    grep -R "^\S.*{" "$STYLEGUIDE_MODULES"  | cut -d "/" -f15 | sed 's/:/:  /' | awk '{print $0,"\n"}'
+  fi
 }
