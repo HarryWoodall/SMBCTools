@@ -381,3 +381,18 @@ function __initFormJson() {
 
     echo "Form $1 added to form-builder";
 }
+
+function webapp {
+    code /c/code/iag-webapp;
+    dotnet run --project "/c/code/iag-contentapi/src/StockportContentApi" --urls=http://localhost:5000/;   
+}
+
+function startWebapp {
+    WebApp="/c/code/iag-webapp/src/StockportWebapp";
+    dotnet watch run --project $WebApp --urls=http://localhost:5001/;   
+}
+
+function startWebappGulp {
+    cd /c/code/iag-webapp/src/StockportWebapp
+    gulp watch
+}
