@@ -14,12 +14,30 @@ NC='\e[0m';
 
 NODE_COMMAND="node --no-warnings $SMBC_TOOLS/Node_Resources/index.js $SMBC_TOOLS"
 
-function smbcinit {
+function smbcInit {
     cd "$SMBC_TOOLS/Node_Resources";
     npm i;
 }
 
-function fbWatch() {
+function smbcHelp {
+    echo -e "\nList of commands"
+    echo -e
+    echo -e "   ${REFERENCE_COLOR}smbcInit${NC}            Install dependancies"
+    echo -e "   ${REFERENCE_COLOR}addjson${NC}             Move json over to formbuilder"
+    echo -e "   ${REFERENCE_COLOR}model${NC}               Create C# and json models of forms"
+    echo -e "   ${REFERENCE_COLOR}flow${NC}                Visualisation of forms"
+    echo -e "   ${REFERENCE_COLOR}slugs${NC}               Display all form slugs"
+    echo -e "   ${REFERENCE_COLOR}validate${NC}            Validate form"
+    echo -e "   ${REFERENCE_COLOR}jira${NC}                Open jira in browser"
+    echo -e "   ${REFERENCE_COLOR}table${NC}               Display tabel of form elements"
+    echo -e "   ${REFERENCE_COLOR}pa${NC}                  Generate power automate mappings for form"
+    echo -e "   ${REFERENCE_COLOR}cypressTemplate${NC}     Cyrpess test boilerplate for form (WIP)"
+    echo -e "   ${REFERENCE_COLOR}fbjWatch${NC}            Watch form-builder-json for file change and automatically move them over"
+    echo -e "   ${REFERENCE_COLOR}fbStart${NC}             Start form-builder form command line"
+    echo -e
+}
+
+function fbjWatch() {
     ARGS="";
     for ELEMENT in "$@"; do
         ARGS+=" \"${ELEMENT}\""
@@ -127,6 +145,8 @@ function addjson() {
         This will only modify files in DSL, keeping a single point of truth.
         Files that exist in DSL but not in DSL will not be copied over.
 
+            ${MODIFIER_COLOR}-init${NC} <${PARAM_COLOR}file name${NC}> -- Create new form with provided file name.
+
             ${MODIFIER_COLOR}-p${NC} -- Will perform a fresh pull of form-builder-json before copying files.
 
             ${MODIFIER_COLOR}-e${NC} -- Will also copy the 'Elements' folder
@@ -134,6 +154,8 @@ function addjson() {
             ${MODIFIER_COLOR}-l${NC} -- Will also copy the 'Lookups' folder
 
             ${MODIFIER_COLOR}-pc${NC} -- Will also copy the 'Payment Config' folder
+
+            ${MODIFIER_COLOR}-ec${NC} -- Will also copy the 'email-config' folder
 
             ${MODIFIER_COLOR}-f${NC} -- Will set all AddressProviders and StreetProviders to fake inside the DSL 
                   after copy has completed
@@ -152,7 +174,7 @@ function addjson() {
 
     fakeAddress=0;
 
-    if [ $1 == "-init" ]; then
+    if [[ $1 == "-init" ]]; then
 
         if [ -n "$2" ]; then
             __initFormJson $2;
@@ -182,6 +204,10 @@ function addjson() {
 
         if [ $arg == "-pc" ]; then
             __updatePaymentConfig;
+        fi
+
+        if [ $arg == "-ec" ]; then
+            __updateEmailConfig;
         fi
 
         # Appending -f will set all AddressProviders to fake 
@@ -327,6 +353,26 @@ function __updatePaymentConfig() {
     done
 }
 
+function __updateEmailConfig() {
+    echo "Updating Email Config..."
+
+    find $WORK_DIR/form-builder-json/email-config -maxdepth 1  -type f | while read emailName; do
+        NAME=$(basename $emailName);
+        fbEmailName=$WORK_DIR/form-builder/src/DSL/email-config/$NAME
+
+        if [ -f $WORK_DIR/form-builder/src/DSL/email-config/$NAME ]; then 
+            if ! cmp -s $emailName $fbEmailName ; then
+                echo "Copying $(basename $NAME) over to form-builder email-config"; 
+                cp $emailName $fbEmailName;
+            fi
+        else
+            echo "Adding $(basename $NAME) to form-builder email-config"; 
+            cp $emailName $fbEmailName; 
+        fi
+
+    done
+}
+
 function __initFormJson() {
     cp $SMBC_TOOLS/Resources/form-template.json $SMBC_TOOLS/Resources/$1.json;
     mv $SMBC_TOOLS/Resources/$1.json $WORK_DIR/form-builder-json/DSL;
@@ -334,22 +380,4 @@ function __initFormJson() {
     sed -i "s/@FORM_URL@/$1/g" $WORK_DIR/form-builder-json/DSL/$1.json;
 
     echo "Form $1 added to form-builder";
-}
-
-function findClasses() {
-  STOCKPORTGOV_MODULES="/c/Users/Harry/code/iag-webapp/src/StockportWebapp/wwwroot/assets/sass/stockportgov/modules"
-  STYLEGUIDE_MODULES="/c/Users/Harry/code/iag-webapp/src/StockportWebapp/wwwroot/assets/sass/StockportStyleGuide/stockport-gov/modules"
-  STOCKPORT_GOV_VIEWS="/c/Users/Harry/code/iag-webapp/src/StockportWebapp/Views/stockportgov"
-
-  if [ $# == 1 ]; then
-    myarr=($(grep -R "^\S.*{" "$STYLEGUIDE_MODULES/$1.scss"  | cut -d "/" -f15 | cut -d "{" -f1 | cut -d "." -f2 | awk '{print $0,"\n"}'))
-
-    for i in "${myarr[@]}"
-    do
-      echo $i
-      grep -R "$i" "$STOCKPORT_GOV_VIEWS" | awk '{print $0}'
-    done
-  else
-    grep -R "^\S.*{" "$STYLEGUIDE_MODULES"  | cut -d "/" -f15 | sed 's/:/:  /' | awk '{print $0,"\n"}'
-  fi
 }
