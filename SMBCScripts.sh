@@ -34,7 +34,12 @@ function smbcHelp {
     echo -e "   ${REFERENCE_COLOR}cypressTemplate${NC}     Cyrpess test boilerplate for form (WIP)"
     echo -e "   ${REFERENCE_COLOR}fbjWatch${NC}            Watch form-builder-json for file change and automatically move them over"
     echo -e "   ${REFERENCE_COLOR}fbStart${NC}             Start form-builder form command line"
+    echo -e "   ${REFERENCE_COLOR}fbjFlowServer${NC}       Start the form-builder-json flow server"
     echo -e
+}
+
+function fbjFlowServer() {
+    concurrently "npm run --prefix ${WORK_DIR}${EXTRA_RESOURCES_DIR}/form-builder-svelte-flow dev" "npm run --prefix ${WORK_DIR}${EXTRA_RESOURCES_DIR}/form-builder-flow-server start" "start http://localhost:5173/";
 }
 
 function fbjWatch() {
